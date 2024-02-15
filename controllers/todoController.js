@@ -2,8 +2,11 @@ const { Todo } = require('../models');
 
 
 module.exports.listAll = async function(req, res) {
-    const todos = await Todo.findAll();
-
+    const todos = await Todo.findAll({
+        where: {
+            user_id: req.user.id
+        }
+    });
     let completeItems = todos.filter(item => item.complete);
     let incompleteItems = todos.filter(item => !item.complete);
 
@@ -12,7 +15,6 @@ module.exports.listAll = async function(req, res) {
         incompleteItems
     });
 };
-
 
 module.exports.displayAddItem = function(req, res) {
     const item = {
