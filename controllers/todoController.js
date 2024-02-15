@@ -7,6 +7,7 @@ module.exports.listAll = async function(req, res) {
             user_id: req.user.id
         }
     });
+
     let completeItems = todos.filter(item => item.complete);
     let incompleteItems = todos.filter(item => !item.complete);
 
@@ -21,22 +22,28 @@ module.exports.displayAddItem = function(req, res) {
         name: '',
         description: '',
     }
+
     res.render('todos/newItem', {
         item
     })
 };
 
 module.exports.addNewItem = async function(req, res){
-    await Todo.create({description: req.body.description});
+    await Todo.create({
+        description: req.body.description,
+        user_id: req.user.id
+    });
     res.redirect('/');
 };
 
-
 module.exports.viewEditItem = async function(req, res) {
-    const todo = await Todo.findByPk(req.params.id);
-    res.render('todos/editItem', {item: todo})
+    const todo = await Todo.findOne({
+        where: {
+            id: req.params.id,
+            user_id: req.user.id
+        }
+    })
 };
-
 
 module.exports.saveEditItem = async function(req, res) {
     await Todo.update({ description: req.body.description}, {
