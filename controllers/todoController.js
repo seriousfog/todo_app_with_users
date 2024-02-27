@@ -41,8 +41,12 @@ module.exports.viewEditItem = async function(req, res) {
         where: {
             id: req.params.id,
             user_id: req.user.id
-        }
-    })
+        }});
+    if (!todo) { //if we can't find it
+        res.redirect('/')
+    } else {
+        res.render('todos/editItem', {item: todo})
+    }
 };
 
 module.exports.saveEditItem = async function(req, res) {
@@ -54,11 +58,11 @@ module.exports.saveEditItem = async function(req, res) {
     res.redirect('/');
 };
 
-
 module.exports.deleteItem = async function(req, res) {
     await Todo.destroy({
         where: {
-            id: req.params.id
+            id: req.params.id,
+            user_id: req.user.id
         }
     })
     res.redirect('/');

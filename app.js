@@ -29,6 +29,8 @@ app.use(session({
   }
 }));
 const {passport} = require('./middleware/passport')
+app.use(passport.initialize());
+app.use(passport.authenticate('session'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
